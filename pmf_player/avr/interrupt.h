@@ -1,0 +1,1 @@
+#define ISR(x) void x()

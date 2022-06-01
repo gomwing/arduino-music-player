@@ -193,13 +193,13 @@ namespace
   uint8_t read_bits(const uint8_t *&ptr_, uint8_t &bit_pos_, uint8_t num_bits_)
   {
     // read bits from the bit stream
-    uint8_t v=pgm_read_byte(ptr_)>>bit_pos_;
+    uint8_t v=pgm_read_byte((const uint8_t*)ptr_)>>bit_pos_;
     bit_pos_+=num_bits_;
     if(bit_pos_>7)
     {
       ++ptr_;
       if(bit_pos_-=8)
-        v|=pgm_read_byte(ptr_)<<(num_bits_-bit_pos_);
+        v|=pgm_read_byte((const uint8_t*)ptr_)<<(num_bits_-bit_pos_);
     }
     return v;
   }
@@ -483,7 +483,7 @@ void pmf_player::apply_channel_effect_vibrato(audio_channel &chl_)
     return;
   uint8_t wave_idx=chl_.fxmem_vibrato_wave&3;
   int8_t vibrato_pos=chl_.fxmem_vibrato_pos;
-  int8_t wave_sample=vibrato_pos<0?-int8_t(pgm_read_byte(&s_waveforms[wave_idx][~vibrato_pos])):pgm_read_byte(&s_waveforms[wave_idx][vibrato_pos]);
+  int8_t wave_sample=vibrato_pos<0?-int8_t(pgm_read_byte((const uint8_t*) & s_waveforms[wave_idx][~vibrato_pos])) : pgm_read_byte((const uint8_t*)&s_waveforms[wave_idx][vibrato_pos]);
   chl_.sample_speed=get_sample_speed(chl_.note_period+(int16_t(wave_sample*chl_.fxmem_vibrato_depth)>>8), chl_.sample_speed>=0);
   if((chl_.fxmem_vibrato_pos+=chl_.fxmem_vibrato_spd)>31)
     chl_.fxmem_vibrato_pos-=64;

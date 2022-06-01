@@ -96,7 +96,7 @@ void pmf_player::mix_buffer(pmf_mixer_buffer &buf_, unsigned num_samples_)
     register uint16_t sample_loop_len=loop_len;
     register uint8_t sample_volume=volume;
     register uint8_t zero=0, upper_tmp;
-
+#ifndef _MSC_VER
     asm volatile
     (
       "push %A[buffer_pos] \n\t"
@@ -153,7 +153,7 @@ void pmf_player::mix_buffer(pmf_mixer_buffer &buf_, unsigned num_samples_)
       ,[buffer_pos] "e" (buffer_begin)
       ,[buffer_end] "l" (buffer_end)
     );
-
+#endif
     // store values back to the channel data
     channel->sample_pos=(long(sample_pos_int-sample_addr)<<8)+sample_pos_frc;
     channel->sample_speed=sample_speed;
