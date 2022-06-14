@@ -16,6 +16,9 @@
     <Filter Include="헤더 파일\avr">
       <UniqueIdentifier>{36ef367d-1d40-4e57-82c5-7c1beb4b01d5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\TimerOne">
+      <UniqueIdentifier>{2ca1ffc4-77f8-46bb-8d9f-d63031df9e7b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="music.h">
@@ -51,6 +54,12 @@
     <ClInclude Include="avr\interrupt.h">
       <Filter>헤더 파일\avr</Filter>
     </ClInclude>
+    <ClInclude Include="TimerOne.h">
+      <Filter>소스 파일\TimerOne</Filter>
+    </ClInclude>
+    <ClInclude Include="config\known_16bit_timers.h">
+      <Filter>소스 파일\TimerOne</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pmf_player_arduino_avr.cpp">
@@ -65,8 +74,16 @@
     <ClCompile Include="pmf_player.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="pmf_player.ino.cpp">
+    <ClCompile Include="TimerOne.cpp">
+      <Filter>소스 파일\TimerOne</Filter>
+    </ClCompile>
+    <ClCompile Include="pmf_player_core.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="pmf_player.ino">
+      <Filter>소스 파일</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -257,4 +257,6 @@ long map(long, long, long, long, long);
 
 ////#include "pins_arduino.h"
 
+#define F_CPU	16000000
+
 #endif

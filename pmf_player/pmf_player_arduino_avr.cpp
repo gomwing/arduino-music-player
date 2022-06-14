@@ -30,6 +30,8 @@
 #include "pmf_player.h"
 #if defined(ARDUINO_ARCH_AVR)
 #include "pmf_data.h"
+#include "TimerOne.h"
+#define PWM_PLAY
 //---------------------------------------------------------------------------
 
 
@@ -43,11 +45,24 @@ static pmf_audio_buffer<int16_t, 400> s_audio_buffer;
 //===========================================================================
 // pmf_player
 //===========================================================================
+
+#ifndef PWM_PLAY
 ISR(TIMER1_COMPA_vect)
 {
-  PORTD=(uint8_t)s_audio_buffer.read_sample<uint16_t, 8>();
+  uint8_t value8bit = s_audio_buffer.read_sample<uint16_t, 8>();
+  const uint8_t timer1PWMpin = 9; 
+  Timer1.setPwmDuty(timer1PWMpin, value8bit*4);
 }
 //----
+#else
+ISR(TIMER2_COMPA_vect) {
+    //interrupt commands for TIMER 2 here
+    uint8_t value8bit = s_audio_buffer.read_sample<uint16_t, 8>();
+    const uint8_t timer1PWMpin = 9;
+    Timer1.setPwmDuty(timer1PWMpin, value8bit * 4);
+}
+
+#endif
 
 uint32_t pmf_player::get_sampling_freq(uint32_t sampling_freq_) const
 {
@@ -57,20 +72,44 @@ uint32_t pmf_player::get_sampling_freq(uint32_t sampling_freq_) const
 
 void pmf_player::start_playback(uint32_t sampling_freq_)
 {
+
   // enable playback interrupt at given playback frequency
-  DDRD=0xff;
+  //DDRD=0xff;
   s_audio_buffer.reset();
+#ifndef PWM_PLAY
   TCCR1A=0;
   TCCR1B=_BV(CS10)|_BV(WGM12); // CTC mode 4 (OCR1A)
   TCCR1C=0;
   TIMSK1=_BV(OCIE1A);          // enable timer 1 counter A
   OCR1A=(16000000+sampling_freq_/2)/sampling_freq_;
+#else
+    // TIMER 2 for interrupt frequency 22222.222222222223 Hz:
+    cli(); // stop interrupts
+    TCCR2A = 0; // set entire TCCR2A register to 0
+    TCCR2B = 0; // same for TCCR2B
+    TCNT2 = 0; // initialize counter value to 0
+    // set compare match register for 22222.222222222223 Hz increments
+    OCR2A = 89; // = 16000000 / (8 * 22222.222222222223) - 1 (must be <256)
+    // turn on CTC mode
+    TCCR2B |= (1 << WGM21);
+    // Set CS22, CS21 and CS20 bits for 8 prescaler
+    TCCR2B |= (0 << CS22) | (1 << CS21) | (0 << CS20);
+    // enable timer compare interrupt
+    TIMSK2 |= (1 << OCIE2A);
+    sei(); // allow interrupts
+
+
+#endif
 }
 //----
 
 void pmf_player::stop_playback()
 {
+#ifndef PWM_PLAY
   TIMSK1=0;
+#else
+    TIMSK2 = 0;
+#endif
 }
 //----
 

@@ -27,20 +27,26 @@
     <ClInclude Include="avr\pgmspace.h" />
     <ClInclude Include="avr\sfr_defs.h" />
     <ClInclude Include="avr\wdt.h" />
+    <ClInclude Include="config\known_16bit_timers.h" />
     <ClInclude Include="music.h" />
     <ClInclude Include="pmf_data.h" />
     <ClInclude Include="pmf_player.h" />
+    <ClInclude Include="TimerOne.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pmf_player.cpp" />
-    <ClCompile Include="pmf_player.ino.cpp" />
     <ClCompile Include="pmf_player_arduino_avr.cpp" />
     <ClCompile Include="pmf_player_arduino_samd.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="pmf_player_core.cpp" />
     <ClCompile Include="pmf_player_teensy.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="TimerOne.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="pmf_player.ino" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -110,7 +116,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;ARDUINO;__AVR__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>./;./avr;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
