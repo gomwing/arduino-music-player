@@ -18,11 +18,11 @@
 #ifndef TimerOne_h_
 #define TimerOne_h_
 
- //#if defined(ARDUINO) && ARDUINO >= 100
+#if defined(ARDUINO) && ARDUINO >= 100
 #include "Arduino.h"
-//#else
-//#include "WProgram.h"
-//#endif
+#else
+#include "WProgram.h"
+#endif
 
 #include "config/known_16bit_timers.h"
 #if defined (__AVR_ATtiny85__)

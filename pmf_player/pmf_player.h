@@ -36,7 +36,12 @@
 // interface
 //============================================================================
 // external
-#include <Arduino.h>
+#if defined(ARDUINO) && ARDUINO >= 100
+#include "Arduino.h"
+#else
+#include "WProgram.h"
+#endif
+
 #include "pmf_data.h"
 
 // new
@@ -451,4 +456,7 @@ pmf_mixer_buffer pmf_audio_buffer<T, buffer_size>::get_mixer_buffer()
 //---------------------------------------------------------------------------
 
 //============================================================================
+
+//#define PWM_PLAY
+
 #endif

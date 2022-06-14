@@ -31,7 +31,7 @@
 #if defined(ARDUINO_ARCH_AVR)
 #include "pmf_data.h"
 #include "TimerOne.h"
-#define PWM_PLAY
+
 //---------------------------------------------------------------------------
 
 
@@ -45,21 +45,19 @@ static pmf_audio_buffer<int16_t, 400> s_audio_buffer;
 //===========================================================================
 // pmf_player
 //===========================================================================
-
 #ifndef PWM_PLAY
-ISR(TIMER1_COMPA_vect)
-{
-  uint8_t value8bit = s_audio_buffer.read_sample<uint16_t, 8>();
-  const uint8_t timer1PWMpin = 9; 
-  Timer1.setPwmDuty(timer1PWMpin, value8bit*4);
+ISR(TIMER1_COMPA_vect) {
+    PORTD = (uint8_t)s_audio_buffer.read_sample<uint16_t, 8>();
 }
 //----
 #else
 ISR(TIMER2_COMPA_vect) {
     //interrupt commands for TIMER 2 here
     uint8_t value8bit = s_audio_buffer.read_sample<uint16_t, 8>();
-    const uint8_t timer1PWMpin = 9;
-    Timer1.setPwmDuty(timer1PWMpin, value8bit * 4);
+    value8bit = s_audio_buffer.read_sample<uint16_t, 8>();
+    //const uint8_t timer1PWMpin = 9;
+    Timer1.setPwmDuty(9, value8bit * 4);
+    //OCR1A=(uint16_t)value8bit<<2;
 }
 
 #endif
@@ -94,6 +92,7 @@ void pmf_player::start_playback(uint32_t sampling_freq_)
     TCCR2B |= (1 << WGM21);
     // Set CS22, CS21 and CS20 bits for 8 prescaler
     TCCR2B |= (0 << CS22) | (1 << CS21) | (0 << CS20);
+    //TCCR2B |= (0 << CS22) | (0 << CS21) | (1 << CS20);
     // enable timer compare interrupt
     TIMSK2 |= (1 << OCIE2A);
     sei(); // allow interrupts

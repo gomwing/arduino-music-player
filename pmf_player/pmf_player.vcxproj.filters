@@ -65,12 +65,6 @@
     <ClCompile Include="pmf_player_arduino_avr.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="pmf_player_arduino_samd.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="pmf_player_teensy.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="pmf_player.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>

@@ -20,17 +20,6 @@ extern "C" int main(void);
 
 #endif 
 
-//extern char virtual_addr[65536];
-int main(void) {
-	memset(virtual_addr, 0, sizeof(virtual_addr));
-	setup();
-	//SetupSCSI_ID();
-	for (;;) {
-		//timing_func();
-		loop();
-	}
-	return 0;
-}
 
 extern "C" void pinMode(uint8_t pin, uint8_t mode) {
 
@@ -55,7 +44,21 @@ int main(void) {
 
 #endif
 
-
+#ifdef _MSC_VER
+//extern char virtual_addr[65536];
+int main(void) {
+	#ifdef _MSC_VER
+	memset(virtual_addr, 0, sizeof(virtual_addr));
+	#endif
+	setup();
+	//SetupSCSI_ID();
+	for (;;) {
+		//timing_func();
+		loop();
+	}
+	return 0;
+}
+#endif
 //============================================================================
 // globals
 //============================================================================
@@ -142,8 +145,13 @@ void setup()
 	s_player.set_row_callback(&row_callback_test); // setup row callback for the effect
   */
   //Timer1.initialize(32);
-	Timer1.initialize(45);
+
+#ifdef PWM_PLAY
+  pinMode(9, OUTPUT);
+  
+	Timer1.initialize(32);
   Timer1.pwm(9, 0); // dummy, required before setPwmDuty()
+#endif
 	s_player.start(22050);
 
 }
