@@ -54,10 +54,10 @@ ISR(TIMER1_COMPA_vect) {
 ISR(TIMER2_COMPA_vect) {
     //interrupt commands for TIMER 2 here
     uint8_t value8bit = s_audio_buffer.read_sample<uint16_t, 8>();
-    value8bit = s_audio_buffer.read_sample<uint16_t, 8>();
+    //value8bit = s_audio_buffer.read_sample<uint16_t, 8>();
     //const uint8_t timer1PWMpin = 9;
-    Timer1.setPwmDuty(9, value8bit * 4);
-    //OCR1A=(uint16_t)value8bit<<2;
+    //Timer1.setPwmDuty(9, value8bit * 4);
+    OCR1A=(uint16_t)value8bit;
 }
 
 #endif
@@ -87,7 +87,7 @@ void pmf_player::start_playback(uint32_t sampling_freq_)
     TCCR2B = 0; // same for TCCR2B
     TCNT2 = 0; // initialize counter value to 0
     // set compare match register for 22222.222222222223 Hz increments
-    OCR2A = 89; // = 16000000 / (8 * 22222.222222222223) - 1 (must be <256)
+    OCR2A = 10; // = 16000000 / (8 * 22222.222222222223) - 1 (must be <256)
     // turn on CTC mode
     TCCR2B |= (1 << WGM21);
     // Set CS22, CS21 and CS20 bits for 8 prescaler

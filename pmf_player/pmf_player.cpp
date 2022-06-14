@@ -152,7 +152,7 @@ void setup()
 	Timer1.initialize(32);
   Timer1.pwm(9, 0); // dummy, required before setPwmDuty()
 #endif
-	s_player.start(22050);
+	s_player.start(15625/2);
 
 }
 //----------------------------------------------------------------------------

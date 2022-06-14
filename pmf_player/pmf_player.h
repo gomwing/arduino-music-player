@@ -457,6 +457,6 @@ pmf_mixer_buffer pmf_audio_buffer<T, buffer_size>::get_mixer_buffer()
 
 //============================================================================
 
-//#define PWM_PLAY
+#define PWM_PLAY
 
 #endif
