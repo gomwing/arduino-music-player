@@ -81,23 +81,38 @@ void pmf_player::start_playback(uint32_t sampling_freq_)
   TIMSK1=_BV(OCIE1A);          // enable timer 1 counter A
   OCR1A=(16000000+sampling_freq_/2)/sampling_freq_;
 #else
-    // TIMER 2 for interrupt frequency 22222.222222222223 Hz:
-    cli(); // stop interrupts
-    TCCR2A = 0; // set entire TCCR2A register to 0
-    TCCR2B = 0; // same for TCCR2B
-    TCNT2 = 0; // initialize counter value to 0
-    // set compare match register for 22222.222222222223 Hz increments
-    OCR2A = 10; // = 16000000 / (8 * 22222.222222222223) - 1 (must be <256)
-    // turn on CTC mode
-    TCCR2B |= (1 << WGM21);
-    // Set CS22, CS21 and CS20 bits for 8 prescaler
-    TCCR2B |= (0 << CS22) | (1 << CS21) | (0 << CS20);
-    //TCCR2B |= (0 << CS22) | (0 << CS21) | (1 << CS20);
-    // enable timer compare interrupt
-    TIMSK2 |= (1 << OCIE2A);
-    sei(); // allow interrupts
+    //// TIMER 2 for interrupt frequency 22222.222222222223 Hz:
+    //cli(); // stop interrupts
+    //TCCR2A = 0; // set entire TCCR2A register to 0
+    ////TCCR2B = 0; // same for TCCR2B
+    //TCNT2 = 0; // initialize counter value to 0
+    //// set compare match register for 22222.222222222223 Hz increments
+    //OCR2A = 255; // = 16000000 / (8 * 22222.222222222223) - 1 (must be <256)
+    //// turn on CTC mode
+    //TCCR2A = (1 << WGM21);
+    //// Set CS22, CS21 and CS20 bits for 8 prescaler
+    //TCCR2B |= (0 << CS22) | (1 << CS21) | (0 << CS20);
+    ////TCCR2B |= (0 << CS22) | (0 << CS21) | (1 << CS20);
+    //// enable timer compare interrupt
+    //TIMSK2 |= (1 << OCIE2A);
+    //sei(); // allow interrupts
+    cli();
+  TCCR2B = 0;// same for TCCR2B
+    TCCR2A = (1 << WGM21);// same for TCCR2B
+  TCNT2 = 0;//initialize counter value to 0
+  // set compare match register for 1khz increments
+  //OCR2A = 128;// = (16*10^6) / (1000*64) - 1 (must be <256) <- bug
+  // turn on CTC mode
+  //TCCR2A |= (1 << WGM21);
+  // Set CS21and and CS20 bit for 64 prescaler
+  TCCR2B &= ~(1 << CS20);
+  TCCR2B |= (1 << CS21);
+  TCCR2B &= ~(1 << CS22);
+  // enable timer compare interrupt
 
-
+  OCR2A = 128;// <- bug: OCR2A 는 TCCR 밑에서 세팅해야 된다..
+  TIMSK2 |= (1 << OCIE2A);
+  sei();
 #endif
 }
 //----
