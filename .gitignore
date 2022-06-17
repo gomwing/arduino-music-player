@@ -19,6 +19,7 @@ Backup*/
 *.gba
 *.arm7
 *.arm9
+*.bin
 
 # linked directory
 _*/
